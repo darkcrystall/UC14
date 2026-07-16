@@ -1,0 +1,173 @@
+:root {
+  --bg: #0f1319;
+  --bg-accent: #2b3442;
+  --bg-input: #151a22;
+  --surface: #181e27;
+  --surface-2: #1f2630;
+  --border: #2a313c;
+  --text: #e7eaf0;
+  --text-dim: #8b93a1;
+  --accent: #8473b3;
+  --accent-strong: #4f287c;
+  --err: #f87171;
+  --dark: #000000;
+  --light: #ffffff;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(
+      circle at 50% -10%,
+      var(--bg-accent),
+      transparent 60%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+}
+
+.page {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* nav entre as duas páginas */
+
+.top-nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.top-nav__link {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid transparent;
+}
+
+.top-nav__link:hover,
+.top-nav__link:focus-visible {
+  color: var(--text);
+}
+
+.top-nav__link.is-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* cartão principal */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+
+.description {
+  color: var(--text-dim);
+  margin: 0 0 1.75rem;
+  font-size: 0.95rem;
+}
+
+/* botão */
+
+.btn-primary {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  color: var(--light);
+  background: var(--accent-strong);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* formulário */
+
+form {
+  margin-top: 0.5rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.large-input {
+  min-height: 200px;
+}
+
+input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(242, 163, 60, 0.18);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem;
+  }
+}
