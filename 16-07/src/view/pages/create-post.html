@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina - Criar Post</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/styles/main.css" />
+    <link
+      rel="shortcut icon"
+      href="../assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <main class="page">
+      <nav class="top-nav">
+        <a href="./feed.html" class="top-nav__link is-active">feed</a>
+        <a href="./create-post.html" class="top-nav__link">criar post</a>
+        <button id="btn-logout" class="top-nav__link top-nav__link--button">
+          sair
+        </button>
+      </nav>
+      <section class="card">
+        <h1>Criar postagem</h1>
+        <p class="description">Faça uma nova postagem</p>
+        <form id="form-criar-post" action="#">
+          <div class="field">
+            <label for="title">Título</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              maxlength="200"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="description">Descrição</label>
+            <input
+              class="large-input"
+              type="text"
+              name="description"
+              id="description"
+              required
+            />
+          </div>
+          <button type="submit" id="btn-criar-post" class="btn-primary">
+            Criar
+          </button>
+        </form>
+      </section>
+    </main>
+    <script src="../assets/scripts/post.js"></script>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+@import url("./palette.css");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(
+      circle at 50% -10%,
+      var(--bg-accent),
+      transparent 60%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* navbar */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo img {
+  width: 32px;
+  height: 32px;
+}
+
+.logo h1 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* botões */
+
+.btn-primary,
+.btn-secondary {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  padding: 0.75rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.15s ease;
+}
+
+.btn-primary {
+  color: var(--text);
+  background: var(--accent);
+  border: none;
+}
+
+.btn-primary:hover {
+  color: var(--light);
+  background: var(--accent-strong);
+}
+
+.btn-secondary {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+/* hero */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1.25rem 6rem;
+}
+
+.hero-content {
+  max-width: 680px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-content h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+.hero-content p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+  padding: 0.85rem 1.75rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero {
+    padding: 2.5rem 1.25rem 4rem;
+  }
+}
+
+/* animações de entrada */
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar {
+  /* "both" = usa o estado do "from" antes de começar e o do "to" depois de terminar,
+     assim o elemento não pisca no lugar errado antes da animação rodar */
+  animation: fade-in-down 0.5s ease both;
+}
+
+.badge,
+.hero-content h2,
+.hero-content p {
+  /* opacity: 0 aqui garante que o elemento comece invisível mesmo
+     se a animação demorar um instante pra iniciar */
+  opacity: 0;
+  animation: fade-in-up 0.6s ease both;
+}
+
+/* stagger: cada elemento entra um pouquinho depois do anterior */
+.badge {
+  animation-delay: 0.1s;
+}
+
+.hero-content h2 {
+  animation-delay: 0.25s;
+}
+
+.hero-content p {
+  animation-delay: 0.4s;
+}
+
+/* respeita quem configurou o sistema pra reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .badge,
+  .hero-content h2,
+  .hero-content p {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina - Entrar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/styles/main.css" />
+    <link
+      rel="shortcut icon"
+      href="../assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <main class="page">
+      <nav class="top-nav">
+        <a href="../pages/form-login.html" class="top-nav__link is-active">login</a>
+        <a href="../pages/form-signup.html" class="top-nav__link">cadastro</a>
+      </nav>
+      <section class="card">
+        <h1>Entrar</h1>
+        <p class="description">Entre na sua conta</p>
+
+        <form id="form-login" action="#">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              maxlength="100"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              maxlength="100"
+              required
+            />
+          </div>
+          <button type="submit" id="btn-login" class="btn-primary">
+            Entrar
+          </button>
+        </form>
+      </section>
+    </main>
+    <script src="../assets/scripts/form-login.js"></script>
+  </body>
+</html>

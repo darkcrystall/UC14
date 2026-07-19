@@ -1,0 +1,60 @@
+const form = document.getElementById("form-login");
+const btnLogin = document.getElementById("btn-login");
+
+form.addEventListener("submit", async (event) => {
+  // evita que o form recarregue a página, que é o comportamento padrão dele
+  event.preventDefault();
+
+  removeErrorMessage();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  // desabilita o botão pra evitar duplo clique enquanto a requisição roda
+  btnLogin.disabled = true;
+  btnLogin.textContent = "Entrando...";
+
+  try {
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    // se o back retornou um status de erro response.ok é false
+    if (!response.ok) {
+      showErrorMessage(data.message || "Não foi possível entrar.");
+      return;
+    }
+
+    // guardamos o token no localStorage pra usar nas próximas requisições
+    // (localStorage persiste mesmo se a aba for fechada)
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // login deu certo, redireciona pra próxima página
+    window.location.href = "./pages/feed.html";
+  } catch (error) {
+    // cai aqui se o servidor estiver fora do ar, sem internet, etc
+    console.error("Erro ao fazer login:", error);
+    showErrorMessage("Erro ao conectar com o servidor. Tente novamente.");
+  } finally {
+    btnLogin.disabled = false;
+    btnLogin.textContent = "Entrar";
+  }
+});
+
+function showErrorMessage(message) {
+  removeErrorMessage();
+  const errorEl = document.createElement("p");
+  errorEl.className = "form-error";
+  errorEl.textContent = message;
+  form.appendChild(errorEl);
+}
+
+function removeErrorMessage() {
+  const existing = form.querySelector(".form-error");
+  if (existing) existing.remove();
+}
