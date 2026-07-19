@@ -1,5 +1,6 @@
 import { AppDataSource } from "../config/data-source";
 import { User } from "../models/User";
+import { CreateUserDTO } from "../schemas/user.schema";
 // um repository (repositório) é um objeto do TypeORM que contém várias funções necessárias para trabalhar com o banco de dados.
 // Pegamos o repositório padrão do TypeORM para a entidade User.
 // Esse repositório já sabe fazer find, save, delete, etc, mas vamos
@@ -24,7 +25,7 @@ export const UserRepository = {
       select: { id: true, name: true, password: true },
     });
   },
-  async create(data: { name: string; email: string; password: string }) {
+  async create(data: CreateUserDTO) {
     // cria o usuário
     const user = repo.create(data);
     // salva o usuário o banco

@@ -1,21 +1,26 @@
-import { Request, Response, NextFunction } from "express";
-// ele valida se nome, email e senha foram preenchidos corretamente
-export function validateUser(req: Request, res: Response, next: NextFunction) {
-  // pega os dados que vieram do corpo da requisição
-  const { name, email, password } = req.body;
-  // valida os campos
-  if (!name || !email || !password) {
-    // 400: BAD REQUEST (requisição mal formada)
-    return res
-      .status(400)
-      .json({ message: "Todos os campos são obrigatórios" });
-  }
-  // senha não pode ter menos de 6 caracteres
-  if (password.length < 6) {
-    return res
-      .status(400)
-      .json({ message: "A senha deve ter pelo menos 6 caracteres" });
-  }
-  // se passou todas verificações, então deixamos a requisição seguir adiante e passar para a camada controller
-  next();
+import {
+  createUserSchema,
+  loginSchema,
+  updateUserSchema,
+} from "./../schemas/user.schema";
+import { NextFunction, Request, Response } from "express";
+import z, { ZodType } from "zod";
+import { BadRequestError } from "../errors/BadRequestError";
+function validate(schema: ZodType) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      throw new BadRequestError(
+        result.error.issues.map((issue) => ({
+          field: issue.path.join("."),
+          message: issue.message,
+        }))
+      );
+    }
+    req.body = result.data;
+    next();
+  };
 }
+export const validateUserCreate = validate(createUserSchema);
+export const validateUserUpdate = validate(updateUserSchema);
+export const validateUserLogin = validate(loginSchema);

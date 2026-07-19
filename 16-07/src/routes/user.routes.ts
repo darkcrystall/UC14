@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import { validateId } from "../middlewares/validateId";
-import { validateUser } from "../middlewares/validateUser";
-import { validateUserFields } from "../middlewares/validateUserFields";
+import { validateUserCreate, validateUserUpdate } from "../middlewares/validateUser";
 import { authMiddleware } from "../middlewares/authMiddleware";
 const userRoutes = Router();
 const userController = new UserController();
@@ -20,15 +19,14 @@ userRoutes.get(
 // a rota de criar novo usuário não precisa de autenticação
 userRoutes.post(
   "/",
-  validateUser,
-  validateUserFields,
+  validateUserCreate,
   userController.create.bind(userController)
 );
 userRoutes.put(
   "/:id",
   authMiddleware,
   validateId,
-  validateUserFields,
+  validateUserUpdate,
   userController.update.bind(userController)
 );
 userRoutes.delete(

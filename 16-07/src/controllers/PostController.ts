@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PostService } from "../services/PostService";
+import { BadRequestError } from "../errors/BadRequestError";
 export class PostController {
   async listAll(req: Request, res: Response, next: NextFunction) {
     try {
@@ -13,7 +14,7 @@ export class PostController {
     try {
       const { userName } = req.params;
       if (typeof userName !== "string") {
-        throw new Error("Nome de usuário inválido");
+        throw new BadRequestError("nome de usuário");
       }
       const posts = await PostService.findByUserName(userName);
       return res.status(200).json(posts);
@@ -43,12 +44,10 @@ export class PostController {
   }
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title } = req.body;
+      const { title, description } = req.body;
       const loggedUser = (req as any).user;
       const post = await PostService.create(
-        {
-          title,
-        },
+        { title, description },
         loggedUser.id
       );
       return res.status(201).json(post);
