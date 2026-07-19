@@ -4,28 +4,31 @@ import { User } from "../models/User";
 const repo = AppDataSource.getRepository(Post);
 export const PostRepository = {
   async findAll() {
-    return repo.find({ relations: ["user"] });
+    return repo.find({ relations: { user: true } });
   },
   async findByPostId(id: number) {
-    return repo.findOne({ where: { id }, relations: ["user"] });
+    return repo.findOne({ where: { id }, relations: { user: true } });
   },
   async findByUserName(userName: string) {
     return repo.find({
       where: { user: { name: userName } },
-      relations: ["user"],
+      relations: { user: true },
     });
   },
   async findByUserId(userId: number) {
     return repo.find({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: { user: true },
     });
   },
-  async create(data: { title: string; user: User }) {
+  async create(data: { title: string; description: string; user: User }) {
     const post = repo.create(data);
     return repo.save(post);
   },
-  async update(id: number, data: { title?: string; user: User }) {
+  async update(
+    id: number,
+    data: { title?: string; description: string; user: User }
+  ) {
     return repo.update(id, data);
   },
   async delete(id: number) {
