@@ -35,7 +35,7 @@ form.addEventListener("submit", async (event) => {
     localStorage.setItem("user", JSON.stringify(data.user));
 
     // login deu certo, redireciona pra próxima página
-    window.location.href = "./pages/feed.html";
+    window.location.href = "./feed.html";
   } catch (error) {
     // cai aqui se o servidor estiver fora do ar, sem internet, etc
     console.error("Erro ao fazer login:", error);

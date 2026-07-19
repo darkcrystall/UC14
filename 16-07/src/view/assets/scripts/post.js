@@ -17,7 +17,7 @@ btnLogout.addEventListener("click", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  removeErrorMessage();
+  removeMessages();
 
   const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
