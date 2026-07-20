@@ -2,9 +2,14 @@ import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { omitPassword } from "../utils/omitPassword";
 import { generateToken } from "../utils/jwt";
-import { CreateUserDTO, LoginUserDTO, UpdateUserDTO } from "../schemas/user.schema";
+import {
+  CreateUserDTO,
+  LoginUserDTO,
+  UpdateUserDTO,
+} from "../schemas/user.schema";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
+import { ConflictError } from "../errors/ConflictError";
 // a camada Service é responsável por chamar os métodos do repository e cuidar das validações das nossas regras de negócio (ex: um usuário precisa de um email válido, etc)
 // aqui estamos criando uma classe de erro que extende a classe Error. Isso é para permitir que, mais tarde, o Controller identifique o tipo de erro de uma forma mais clara
 export const UserService = {
@@ -22,6 +27,10 @@ export const UserService = {
     return user;
   },
   async create(data: CreateUserDTO) {
+    const alreadyInUse = await UserRepository.findByEmail(data.email);
+    if (alreadyInUse) {
+      throw new ConflictError("e-mail", data.email);
+    }
     // este método gera uma senha criptografada
     const hashedPassword = await bcrypt.hash(data.password, 10);
     // isso gera um objeto que é assim:
@@ -52,10 +61,7 @@ export const UserService = {
     return { user: omitPassword(user), token };
   },
   // atualiza um usuário existente
-  async update(
-    id: number,
-    data: UpdateUserDTO
-  ) {
+  async update(id: number, data: UpdateUserDTO) {
     // reaproveitamos o getById, pos já busca o usuário e já lança NotFoundError se não existir
     const user = await UserRepository.findById(id);
     if (!user) {
@@ -81,7 +87,7 @@ export const UserService = {
   async delete(id: number) {
     const result = await UserRepository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundError("usuárop");
+      throw new NotFoundError("usuário");
     }
   },
 };
