@@ -20,8 +20,10 @@
   <body>
     <main class="page">
       <nav class="top-nav">
-        <a href="./feed.html" class="top-nav__link is-active">feed</a>
-        <a href="./create-post.html" class="top-nav__link">criar post</a>
+        <a href="./feed.html" class="top-nav__link">feed</a>
+        <a href="./create-post.html" class="top-nav__link is-active"
+          >criar post</a
+        >
         <button id="btn-logout" class="top-nav__link top-nav__link--button">
           sair
         </button>
@@ -42,13 +44,14 @@
           </div>
           <div class="field">
             <label for="description">Descrição</label>
-            <input
+            <textarea
               class="large-input"
               type="text"
               name="description"
               id="description"
               required
-            />
+            >
+            </textarea>
           </div>
           <button type="submit" id="btn-criar-post" class="btn-primary">
             Criar

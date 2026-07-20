@@ -1,5 +1,6 @@
 const form = document.getElementById("form-cadastro");
 const btnCadastro = document.getElementById("btn-cadastro");
+const messageDiv = document.getElementById("signup-message");
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -33,8 +34,16 @@ form.addEventListener("submit", async (event) => {
       return;
     }
 
+    // se der certo, mostra uma mensagem
+    messageDiv.classList.remove("hidden");
+    messageDiv.classList.add("form-success");
+    messageDiv.textContent =
+      "Cadastrado com sucesso! Redirecionando para autenticar...";
+
     // cadastro deu certo, manda pra tela de login
-    window.location.href = "./form-login.html";
+    setTimeout(() => {
+      window.location.href = "./form-login.html";
+    }, 2000);
   } catch (error) {
     console.error("Erro ao cadastrar:", error);
     showErrorMessage("Erro ao conectar com o servidor. Tente novamente.");

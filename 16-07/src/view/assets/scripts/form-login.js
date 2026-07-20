@@ -1,5 +1,6 @@
 const form = document.getElementById("form-login");
 const btnLogin = document.getElementById("btn-login");
+const messageDiv = document.getElementById('login-message');
 
 form.addEventListener("submit", async (event) => {
   // evita que o form recarregue a página, que é o comportamento padrão dele
@@ -28,6 +29,10 @@ form.addEventListener("submit", async (event) => {
       showErrorMessage(data.message || "Não foi possível entrar.");
       return;
     }
+    // se der certo, mostra uma mensagem
+    messageDiv.classList.remove("hidden");
+    messageDiv.classList.add("form-success");
+    messageDiv.textContent = 'Autenticado com sucesso! Redirecionando...';
 
     // guardamos o token no localStorage pra usar nas próximas requisições
     // (localStorage persiste mesmo se a aba for fechada)
@@ -35,7 +40,9 @@ form.addEventListener("submit", async (event) => {
     localStorage.setItem("user", JSON.stringify(data.user));
 
     // login deu certo, redireciona pra próxima página
-    window.location.href = "./feed.html";
+    setTimeout(() => {
+    window.location.href = './feed.html';
+    }, 2000);
   } catch (error) {
     // cai aqui se o servidor estiver fora do ar, sem internet, etc
     console.error("Erro ao fazer login:", error);
