@@ -5,7 +5,7 @@ const btnLogout = document.getElementById("btn-logout");
 // se não tem token, o usuário não tá logado, então manda ele pro login
 const token = localStorage.getItem("token");
 if (!token) {
-  window.location.href = "../index.html";
+  window.location.href = "./form-login.html";
 }
 
 btnLogout.addEventListener("click", () => {
