@@ -15,7 +15,7 @@ export class User {
   // @Column define que esta propriedade será uma coluna no banco.
   // length: 100 -> tamanho máximo do campo.
   // nullable: false -> não pode ser nulo.
-  @Column({ type: "varchar", length: 150, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: false })
   name: string;
   // unique: true garante que o valor será único na tabela (não pode repetir).
   @Column({ type: "varchar", length: 100, unique: true, nullable: false })

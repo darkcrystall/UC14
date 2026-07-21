@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyToken } from "../utils/jwt";
+import { verifyToken } from "../auth/jwt";
 // middleware para proteger rotas que exigem autenticação
 export function authMiddleware(
   req: Request,

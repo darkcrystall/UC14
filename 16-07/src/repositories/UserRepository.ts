@@ -20,7 +20,7 @@ export const UserRepository = {
   },
   // busca por e-mail
   async findByEmail(email: string) {
-    return repo.find({
+    return repo.findOne({
       where: { email },
       select: { id: true },
     });

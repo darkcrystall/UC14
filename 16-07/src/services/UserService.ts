@@ -1,23 +1,27 @@
 import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { omitPassword } from "../utils/omitPassword";
-import { generateToken } from "../utils/jwt";
+import { generateToken } from "../auth/jwt";
 import {
   CreateUserDTO,
   LoginUserDTO,
+  ReturnUserDTO,
   UpdateUserDTO,
 } from "../schemas/user.schema";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { ConflictError } from "../errors/ConflictError";
+import { User } from "../models/User";
 // a camada Service é responsável por chamar os métodos do repository e cuidar das validações das nossas regras de negócio (ex: um usuário precisa de um email válido, etc)
 // aqui estamos criando uma classe de erro que extende a classe Error. Isso é para permitir que, mais tarde, o Controller identifique o tipo de erro de uma forma mais clara
 export const UserService = {
+  // private repository: Repository<User> = AppDataSource.getRepository(User);
+
   // como para listar não precisamos validar nada, aqui só chamamos o método repository, pois o controller não pode se comunicar diretamente com o repository, apenas com a service
-  async listAll() {
-    return UserRepository.findAll();
+  async listAll(): Promise<User[]> {
+    return await UserRepository.findAll();
   },
-  async getById(id: number) {
+  async getById(id: number): Promise<User> {
     const user = await UserRepository.findById(id);
     // aqui vai nossa primeira validação: se não encontrarmos um user com esse id, ele não existe. se não existe, lança um erro
     if (!user) {
@@ -26,7 +30,7 @@ export const UserService = {
     // se encontrou, não cai no "if", então podemos usar o return e retornar o user
     return user;
   },
-  async create(data: CreateUserDTO) {
+  async create(data: CreateUserDTO): Promise<ReturnUserDTO> {
     const alreadyInUse = await UserRepository.findByEmail(data.email);
     if (alreadyInUse) {
       throw new ConflictError("e-mail", data.email);
@@ -51,7 +55,7 @@ export const UserService = {
   async login(data: LoginUserDTO) {
     const user = await UserRepository.findByEmailWithPassword(data.email);
     if (!user || !data.password) {
-      throw new NotFoundError("Usuário não encontrado");
+      throw new NotFoundError("usuário");
     }
     const passwordIsValid = await bcrypt.compare(data.password, user.password);
     if (!passwordIsValid) {

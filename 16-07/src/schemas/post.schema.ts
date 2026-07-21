@@ -1,4 +1,9 @@
 import { z } from "zod";
+export const postSchema = z.object({
+  title: z.string(),
+  description: z.string()
+})
+export const returnPostSchema = postSchema.array()
 export const createPostSchema = z.object({
   title: z
     .string()

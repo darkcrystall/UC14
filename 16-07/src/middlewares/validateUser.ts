@@ -4,7 +4,7 @@ import {
   updateUserSchema,
 } from "./../schemas/user.schema";
 import { NextFunction, Request, Response } from "express";
-import z, { ZodType } from "zod";
+import { ZodType } from "zod";
 import { BadRequestError } from "../errors/BadRequestError";
 function validate(schema: ZodType) {
   return (req: Request, res: Response, next: NextFunction) => {
