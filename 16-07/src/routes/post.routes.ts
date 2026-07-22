@@ -2,13 +2,14 @@ import { Router } from "express";
 import { PostController } from "../controllers/PostController";
 import { validateId } from "../middlewares/validateId";
 import { authMiddleware } from "../middlewares/authMiddleware";
+import { NewAuthMiddleware } from "../middlewares/newAuthMiddleware";
 const postRoutes = Router();
 const postController = new PostController();
 // POST ROUTES
 postRoutes.get("/", postController.listAll.bind(postController));
 postRoutes.post(
   "/",
-  authMiddleware,
+  NewAuthMiddleware,
   postController.create.bind(postController)
 );
 postRoutes.get(

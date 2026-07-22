@@ -3,13 +3,17 @@ const feedStatus = document.getElementById("feed-status");
 const btnLogout = document.getElementById("btn-logout");
 
 // se não tem token, o usuário não tá logado, então manda ele pro login
-const token = localStorage.getItem("token");
-if (!token) {
-  window.location.href = "../index.html";
-}
+// const token = localStorage.getItem("token");
+// if (!token) {
+//   window.location.href = "../index.html";
+// }
 
-btnLogout.addEventListener("click", () => {
-  localStorage.removeItem("token");
+btnLogout.addEventListener("click", async () => {
+  await fetch("http://localhost:3000/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
   localStorage.removeItem("user");
   window.location.href = "../index.html";
 });
@@ -22,14 +26,14 @@ async function loadFeed() {
   try {
     // GET /posts é público, mas mandamos o token porque a lista pode acabar exigindo autenticação no futuro
     const response = await fetch("http://localhost:3000/posts", {
-      headers: { Authorization: `Bearer ${token}` },
+      // headers: { Authorization: `Bearer ${token}` },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
       if (response.status === 401) {
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "../index.html";
         return;
@@ -66,7 +70,7 @@ function renderPosts(posts) {
       ${
         post.description
           ? `<p class="post-card__description">${escapeHtml(
-              post.description
+              post.description,
             )}</p>`
           : ""
       }

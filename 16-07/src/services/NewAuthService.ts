@@ -1,11 +1,15 @@
-import { Repository } from "typeorm";
-import { AppDataSource } from "../config/data-source";
-import { User } from "../models/User";
-import { CreateUserDTO } from "../schemas/user.schema";
+import { IPayload } from "../auth/IPayload";
+import { generateToken, verifyToken } from "../auth/jwt";
 
 export class NewAuthService {
-    private repository: Repository<User> = AppDataSource.getRepository(User);
-    async register(data: CreateUserDTO) {
-        
-    }
+  generate(payload: IPayload) {
+    return generateToken({
+      id: payload.id,
+      email: payload.email,
+    });
+  }
+
+  verify(token: string) {
+    return verifyToken(token);
+  }
 }

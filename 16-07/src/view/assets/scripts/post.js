@@ -3,16 +3,21 @@ const btnCriarPost = document.getElementById("btn-criar-post");
 const btnLogout = document.getElementById("btn-logout");
 
 // se não tem token, o usuário não tá logado, então manda ele pro login
-const token = localStorage.getItem("token");
-if (!token) {
-  window.location.href = "./form-login.html";
-}
+// const token = localStorage.getItem("token");
+// if (!token) {
+//   window.location.href = "./form-login.html";
+// }
 
-btnLogout.addEventListener("click", () => {
-  localStorage.removeItem("token");
+btnLogout.addEventListener("click", async () => {
+  await fetch("http://localhost:3000/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
   localStorage.removeItem("user");
   window.location.href = "../index.html";
 });
+
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -28,11 +33,12 @@ form.addEventListener("submit", async (event) => {
   try {
     const response = await fetch("http://localhost:3000/posts", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // manda o token pra rota autenticada saber quem tá criando o post
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   "Content-Type": "application/json",
+      //   // manda o token pra rota autenticada saber quem tá criando o post
+      //   Authorization: `Bearer ${token}`,
+      // },
+      credentials: "include",
       body: JSON.stringify({ title, description }),
     });
 
@@ -41,7 +47,6 @@ form.addEventListener("submit", async (event) => {
     if (!response.ok) {
       // se o token expirou ou é inválido, manda de volta pro login
       if (response.status === 401) {
-        localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "./form-login.html";
         return;

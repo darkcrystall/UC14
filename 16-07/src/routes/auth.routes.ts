@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { AuthController } from "../controllers/AuthController";
-import { validateUserLogin } from "../middlewares/validateUser";
+import { NewAuthController } from "../controllers/NewAuthController";
 const authRoutes = Router();
-const authController = new AuthController();
-authRoutes.post("/login", validateUserLogin, authController.login.bind(authController));
+const authController = new NewAuthController();
+authRoutes.post("/login", authController.login.bind(authController));
+authRoutes.post("/logout", authController.logout.bind(authController));
 export default authRoutes;
