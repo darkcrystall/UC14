@@ -64,6 +64,18 @@ export const UserService = {
     const token = generateToken({ id: user.id, email: user.email });
     return { user: omitPassword(user), token };
   },
+  // checa a senha do usuário
+  async checkUserPassword(id: number, pass: string) {
+    const user = await UserRepository.findById(id);
+    if (!user) {
+      throw new NotFoundError("usuário");
+    }
+    const passwordIsValid = await bcrypt.compare(pass, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedError();
+    }
+    return { user: omitPassword(user) };
+  },
   // atualiza um usuário existente
   async update(id: number, data: UpdateUserDTO) {
     // reaproveitamos o getById, pos já busca o usuário e já lança NotFoundError se não existir

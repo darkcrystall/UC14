@@ -2,6 +2,7 @@ import { loginSchema, LoginUserDTO } from "./../schemas/user.schema";
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { NewAuthService } from "../services/NewAuthService";
+import { UnauthorizedError } from "../errors/UnauthorizedError";
 
 export class NewAuthController {
   private authService: NewAuthService = new NewAuthService();
@@ -16,16 +17,16 @@ export class NewAuthController {
       email: loggedUser.user.email,
     });
 
-    console.log("Token:", token);
+    // console.log("Token:", token);
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 1000 * 60 * 60,
+      secure: false, // true
+      sameSite: "lax", // none
+      maxAge: 1000 * 60 * 60, //1h
     });
 
-    console.log("Headers:", res.getHeaders());
+    // console.log("Headers:", res.getHeaders());
 
     return res.status(200).json({
       message: "Login realizado com sucesso",
@@ -34,7 +35,21 @@ export class NewAuthController {
 
   async logout(req: Request, res: Response) {
     res.clearCookie("token");
-
     return res.sendStatus(204);
+  }
+
+  async checkUserPassword(req: Request, res: Response) {
+    const userPassword: string = req.body;
+    if (!req.user?.id) {
+      throw new UnauthorizedError();
+    }
+    const passwordIsValid = await UserService.checkUserPassword(
+      req.user?.id,
+      userPassword
+    );
+    if (!passwordIsValid) {
+      throw new UnauthorizedError();
+    }
+    return res.status(200).json({ message: "Senha válida"})
   }
 }

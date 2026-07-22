@@ -1,6 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { PostService } from "../services/PostService";
 import { BadRequestError } from "../errors/BadRequestError";
+import { UnauthorizedError } from "../errors/UnauthorizedError";
+import {
+  CreatePostDTO,
+  createPostSchema,
+  UpdatePostDTO,
+  updatePostSchema,
+} from "../schemas/post.schema";
 export class PostController {
   async listAll(req: Request, res: Response, next: NextFunction) {
     try {
@@ -34,8 +41,11 @@ export class PostController {
   async listMyPosts(req: Request, res: Response, next: NextFunction) {
     try {
       // as informações do usuário que esá logado vem da requisição através do token
-      const loggedUser = (req as any).user;
+      const loggedUser = req.user;
       // lista os posts do usuário logado
+      if (!loggedUser) {
+        throw new UnauthorizedError();
+      }
       const myPosts = await PostService.listMyPosts(loggedUser.id);
       return res.status(200).json(myPosts);
     } catch (error) {
@@ -44,12 +54,12 @@ export class PostController {
   }
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description } = req.body;
-      const loggedUser = (req as any).user;
-      const post = await PostService.create(
-        { title, description },
-        loggedUser.id
-      );
+      const postData: CreatePostDTO = createPostSchema.parse(req.body);
+      const loggedUser = req.user;
+      if (!loggedUser) {
+        throw new UnauthorizedError();
+      }
+      const post = await PostService.create(postData, loggedUser.id);
       return res.status(201).json(post);
     } catch (error) {
       next(error);
@@ -58,9 +68,12 @@ export class PostController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);
-      const { title } = req.body;
-      const loggedUser = (req as any).user;
-      await PostService.update(id, { title }, loggedUser.id);
+      const postData: UpdatePostDTO = updatePostSchema.parse(req.body);
+      const loggedUser = req.user;
+      if (!loggedUser) {
+        throw new UnauthorizedError();
+      }
+      await PostService.update(id, postData, loggedUser.id);
       return res.status(204).send();
     } catch (error) {
       next(error);
@@ -69,7 +82,10 @@ export class PostController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);
-      const loggedUser = (req as any).user;
+      const loggedUser = req.user;
+      if (!loggedUser) {
+        throw new UnauthorizedError();
+      }
       await PostService.delete(id, loggedUser.id);
       return res.status(204).send();
     } catch (error) {

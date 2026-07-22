@@ -1,4 +1,5 @@
 @import url("./palette.css");
+@import url("./index.css");
 
 * {
   box-sizing: border-box;
@@ -80,38 +81,16 @@ h1 {
   font-size: 0.95rem;
 }
 
-/* botão */
+.profile-buttons {
+  display: flex;
+  justify-content: space-between;
+}
 
-.btn-primary {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text);
-  background: var(--accent);
+/* botão de deletar */
+
+.btn-secondary:hover.delete {
+  background: var(--err);
   border: none;
-  border-radius: 10px;
-  padding: 0.75rem 1.4rem;
-  cursor: pointer;
-  transition: all 0.3s ease, transform 0.15s ease;
-}
-
-.btn-primary:hover {
-  color: var(--light);
-  background: var(--accent-strong);
-}
-
-.btn-primary:active {
-  transform: translateY(1px);
-}
-
-.btn-primary:focus-visible {
-  outline: 2px solid var(--accent-strong);
-  outline-offset: 2px;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: progress;
 }
 
 /* formulário */

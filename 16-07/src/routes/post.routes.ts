@@ -14,7 +14,7 @@ postRoutes.post(
 );
 postRoutes.get(
   "/myposts",
-  authMiddleware,
+  NewAuthMiddleware,
   postController.listMyPosts.bind(postController)
 );
 postRoutes.get(

@@ -1,5 +1,7 @@
+import { UpdateUserDTO, updateUserSchema } from './../schemas/user.schema';
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/UserService";
+import { UnauthorizedError } from "../errors/UnauthorizedError";
 
 export class UserController {
   // GET /users -> lista todos os usuários
@@ -17,7 +19,10 @@ export class UserController {
   // GET /users/:id -> busca um usuário por id
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id); // pega o id pelos paraâmetros da URL
+      if (!req.user?.id) {
+        throw new UnauthorizedError();
+      }
+      const id = req.user.id;       
       const user = await UserService.getById(id);
       return res.json(user);
     } catch (error) {
@@ -37,18 +42,24 @@ export class UserController {
   // PUT /users -> atualiza um usuário existente
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
-      const { name, email, password } = req.body;
-      const user = await UserService.update(id, { name, email, password });
+      if (!req.user?.id) {
+        throw new UnauthorizedError();
+      }
+      const id = req.user.id; 
+      const updateData: UpdateUserDTO = updateUserSchema.parse(req.body);
+      const user = await UserService.update(id, updateData);
       return res.json(user);
     } catch (error) {
       next(error);
     }
   }
-  // DELETE /users/:id -> deleta um usuário exstente
+  // DELETE /users/:id -> deleta um usuário existente
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = Number(req.params.id);
+      if (!req.user?.id) {
+        throw new UnauthorizedError();
+      }
+      const id = req.user.id; 
       await UserService.delete(id);
       // 204: NO CONTENT
       return res.status(204).send();

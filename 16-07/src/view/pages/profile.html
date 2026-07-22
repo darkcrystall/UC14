@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina - Criar Post</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/styles/main.css" />
+    <link
+      rel="shortcut icon"
+      href="../assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <main class="page">
+      <nav class="top-nav">
+        <a href="./feed.html" class="top-nav__link">feed</a>
+        <a href="./create-post.html" class="top-nav__link">criar post</a>
+        <a href="./profile.html" class="top-nav__link is-active">perfil</a>
+        <button id="btn-logout" class="top-nav__link top-nav__link--button">
+          sair
+        </button>
+      </nav>
+      <section class="card">
+        <h1>Perfil</h1>
+        <p class="description">Edite seu perfil</p>
+        <form id="form-editar-perfil" action="#">
+          <div class="field">
+            <label for="name">Nome</label>
+            <input type="text" name="name" id="name" maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" name="email" id="email" maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="new-password">Trocar senha</label>
+            <input
+              type="password"
+              name="new-password"
+              id="new-password"
+              maxlength="100"
+            />
+          </div>
+          <div class="field">
+            <label for="actual-password">Senha atual</label>
+            <input
+              type="password"
+              name="actual-password"
+              id="actual-password"
+              maxlength="100"
+              required
+            />
+          </div>
+          <div class="profile-buttons">
+            <button type="submit" id="btn-editar-perfil" class="btn-primary">
+              Confirmar
+            </button>
+            <button id="btn-deletar-perfil" class="btn-secondary delete">
+              Deletar perfil
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script src="../assets/scripts/profile.js"></script>
+  </body>
+</html>

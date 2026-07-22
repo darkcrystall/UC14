@@ -1,4 +1,4 @@
-import { IPayload } from './../auth/IPayload';
+import { IPayload } from '../auth/IPayload';
 
 declare global {
   namespace Express {
