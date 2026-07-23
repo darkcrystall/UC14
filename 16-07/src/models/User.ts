@@ -2,7 +2,7 @@
 // comportamento extra a classes, métodos ou propriedades de forma
 // declarativa, usando o símbolo @. É por causa deles que conseguimos
 // transformar classes e propriedades em tabelas e colunas no banco.
-import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Post } from "./Post";
 // @Entity('users') indica que esta classe representa a tabela "users".
 @Entity("users")
@@ -27,6 +27,12 @@ export class User {
   // o campo já não vem na consulta por padrão. Só vem se pedirmos explicitamente.
   @Column({ type: "varchar", length: 255, nullable: false, select: false })
   password: string;
+  @CreateDateColumn()
+  createdAt: Date | null;
+  @UpdateDateColumn()
+  updatedAt: Date | null;
+  @DeleteDateColumn()
+  deletedAt: Date | null;
   // @OneToMany indica que um 'User' pode ter vários 'Post' (1:N).
   // Precisamos passar dois parâmetros:
   // () => Post -> função que retorna a entidade relacionada.
@@ -34,7 +40,6 @@ export class User {
   // O TypeORM usa isso para criar a relação e a chave estrangeira
   // automaticamente. A outra ponta dessa relação é declarada em Post.
   // Temos que fazer isso sempre para todos os envolvidos, nesse caso, tanto para User quanto para Post
-  @OneToMany(() => Post, (post) => post.user, { cascade: true })
-  @JoinTable()
+  @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 }

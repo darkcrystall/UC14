@@ -29,7 +29,7 @@ export const UserRepository = {
   async findByEmailWithPassword(email: string) {
     return repo.findOne({
       where: { email },
-      select: { id: true, name: true, password: true },
+      select: { id: true, name: true, email: true, password: true },
     });
   },
   async create(data: CreateUserDTO) {
@@ -43,6 +43,9 @@ export const UserRepository = {
   // afetadas (result.affected), que o Service usa pra saber se realmente
   // existia um usuário com esse id
   async delete(id: number) {
-    return repo.delete(id);
+    const user = await repo.findOne({ where: { id }});
+    user!.email = `deleted_${user!.id}_${user!.email}`;
+    await repo.save(user!);
+    return repo.softDelete(id);
   },
 };

@@ -1,6 +1,6 @@
 const form = document.getElementById("form-login");
 const btnLogin = document.getElementById("btn-login");
-const messageDiv = document.getElementById('login-message');
+const messageDiv = document.getElementById("login-message");
 
 form.addEventListener("submit", async (event) => {
   // evita que o form recarregue a página, que é o comportamento padrão dele
@@ -19,6 +19,7 @@ form.addEventListener("submit", async (event) => {
     const response = await fetch("http://localhost:3000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
@@ -32,16 +33,16 @@ form.addEventListener("submit", async (event) => {
     // se der certo, mostra uma mensagem
     messageDiv.classList.remove("hidden");
     messageDiv.classList.add("form-success");
-    messageDiv.textContent = 'Autenticado com sucesso! Redirecionando...';
+    messageDiv.textContent = "Autenticado com sucesso! Redirecionando...";
 
     // guardamos o token no localStorage pra usar nas próximas requisições
     // (localStorage persiste mesmo se a aba for fechada)
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // localStorage.setItem("token", data.token);
+    // localStorage.setItem("user", JSON.stringify(data.user));
 
     // login deu certo, redireciona pra próxima página
     setTimeout(() => {
-    window.location.href = './feed.html';
+      window.location.href = "./feed.html";
     }, 2000);
   } catch (error) {
     // cai aqui se o servidor estiver fora do ar, sem internet, etc

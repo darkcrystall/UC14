@@ -13,15 +13,12 @@ export function NewAuthMiddleware(
     throw new UnauthorizedError();
   }
 
-  try {
-    const payload = verifyToken(token);
-    if (!payload) {
-      throw new UnauthorizedError();
-    }
-    req.user = payload;
+  const payload = verifyToken(token);
 
-    next();
-  } catch {
+  if (!payload) {
     throw new UnauthorizedError();
   }
+
+  req.user = payload;
+  next();
 }

@@ -21,8 +21,8 @@ export class NewAuthController {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // true
-      sameSite: "lax", // none
+      secure: true, // true
+      sameSite: "none", // lax
       maxAge: 1000 * 60 * 60, //1h
     });
 
@@ -39,13 +39,14 @@ export class NewAuthController {
   }
 
   async checkUserPassword(req: Request, res: Response) {
-    const userPassword: string = req.body;
-    if (!req.user?.id) {
+    console.log(req.user)
+    const { password } = req.body;
+    if (!req.user?.email) {
       throw new UnauthorizedError();
     }
     const passwordIsValid = await UserService.checkUserPassword(
-      req.user?.id,
-      userPassword
+      req.user?.email,
+      password
     );
     if (!passwordIsValid) {
       throw new UnauthorizedError();

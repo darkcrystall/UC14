@@ -21,14 +21,14 @@ export const UserService = {
   async listAll(): Promise<User[]> {
     return await UserRepository.findAll();
   },
-  async getById(id: number): Promise<User> {
+  async getById(id: number): Promise<ReturnUserDTO> {
     const user = await UserRepository.findById(id);
     // aqui vai nossa primeira validação: se não encontrarmos um user com esse id, ele não existe. se não existe, lança um erro
     if (!user) {
       throw new NotFoundError("usuário");
     }
     // se encontrou, não cai no "if", então podemos usar o return e retornar o user
-    return user;
+    return omitPassword(user);
   },
   async create(data: CreateUserDTO): Promise<ReturnUserDTO> {
     const alreadyInUse = await UserRepository.findByEmail(data.email);
@@ -65,8 +65,8 @@ export const UserService = {
     return { user: omitPassword(user), token };
   },
   // checa a senha do usuário
-  async checkUserPassword(id: number, pass: string) {
-    const user = await UserRepository.findById(id);
+  async checkUserPassword(email: string, pass: string) {
+    const user = await UserRepository.findByEmailWithPassword(email);
     if (!user) {
       throw new NotFoundError("usuário");
     }

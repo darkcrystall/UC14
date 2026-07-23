@@ -14,6 +14,7 @@ export function verifyToken(token: string) {
     // para saber se é válido, usamos verify() da JWT. é necessário dois argumentos: o token e o "segredo" da chave. se for válido, ele retorna o próprio token, se não for retorna null
     return jwt.verify(token, process.env.JWT_SECRET!) as IPayload;
   } catch (error) {
+    console.log("Erro ao verificar token:", error);
     return null;
   }
 }
