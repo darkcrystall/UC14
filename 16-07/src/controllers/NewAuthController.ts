@@ -21,9 +21,9 @@ export class NewAuthController {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // true
-      sameSite: "none", // lax
-      maxAge: 1000 * 60 * 60, //1h
+      secure: false, // true
+      sameSite: "lax", // none, strict
+      maxAge: 1000 * 60 * 60, // 1h
     });
 
     // console.log("Headers:", res.getHeaders());

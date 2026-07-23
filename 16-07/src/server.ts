@@ -9,10 +9,14 @@ import cookieParser from "cookie-parser";
 const app: Application = express();
 dotenv.config();
 const PORT = process.env.PORT; // pega o valor da variável PORT do .env
-app.use(cors({
-  origin: "http://127.0.0.1:5500",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

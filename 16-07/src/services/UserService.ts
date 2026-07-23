@@ -5,7 +5,6 @@ import { generateToken } from "../auth/jwt";
 import {
   CreateUserDTO,
   LoginUserDTO,
-  ReturnUserDTO,
   UpdateUserDTO,
 } from "../schemas/user.schema";
 import { NotFoundError } from "../errors/NotFoundError";
@@ -21,7 +20,7 @@ export const UserService = {
   async listAll(): Promise<User[]> {
     return await UserRepository.findAll();
   },
-  async getById(id: number): Promise<ReturnUserDTO> {
+  async getById(id: number): Promise<Partial<User>> {
     const user = await UserRepository.findById(id);
     // aqui vai nossa primeira validação: se não encontrarmos um user com esse id, ele não existe. se não existe, lança um erro
     if (!user) {
@@ -30,7 +29,7 @@ export const UserService = {
     // se encontrou, não cai no "if", então podemos usar o return e retornar o user
     return omitPassword(user);
   },
-  async create(data: CreateUserDTO): Promise<ReturnUserDTO> {
+  async create(data: CreateUserDTO): Promise<Partial<User>> {
     const alreadyInUse = await UserRepository.findByEmail(data.email);
     if (alreadyInUse) {
       throw new ConflictError("e-mail", data.email);

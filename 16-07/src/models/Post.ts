@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 // @Entity('posts') indica que esta classe representa a tabela "posts".
 @Entity("posts")
@@ -10,6 +10,12 @@ export class Post {
   title: string;
   @Column({ type: "text", nullable: false })
   description: string;
+  @CreateDateColumn()
+  createdAt: Date | null;
+  @UpdateDateColumn()
+  updatedAt: Date | null;
+  @DeleteDateColumn()
+  deletedAt: Date | null;
   // @ManyToOne indica que vários posts podem pertencer a um único usuário (N:1).
   // () => User -> função que retorna a entidade relacionada.
   // user => user.posts -> indica a propriedade em User que referencia os posts.
