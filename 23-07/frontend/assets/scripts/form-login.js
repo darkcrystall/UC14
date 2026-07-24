@@ -42,9 +42,9 @@ form.addEventListener("submit", async (event) => {
     // localStorage.setItem("user", JSON.stringify(data.user));
 
     // login deu certo, redireciona pra próxima página
-    // setTimeout(() => {
-    //   window.location.href = "./profile.html";
-    // }, 2000);
+    setTimeout(() => {
+      window.location.href = "./profile.html";
+    }, 2000);
   } catch (error) {
     // cai aqui se o servidor estiver fora do ar, sem internet, etc
     console.error("Erro ao fazer login:", error);

@@ -25,11 +25,10 @@ async function loadUserData() {
       showErrorMessage("Não foi possível carregar seus dados.");
       return;
     }
+    const data = await response.json();
 
-    const user = await response.json();
-
-    document.getElementById("name").value = user.name ?? "";
-    document.getElementById("email").value = user.email ?? "";
+    document.getElementById("name").value = data.user.name ?? "";
+    document.getElementById("email").value = data.user.email ?? "";
   } catch (error) {
     console.error("Erro ao carregar dados do usuário:", error);
     showErrorMessage("Erro ao conectar com o servidor. Tente novamente.");

@@ -25,13 +25,16 @@ form.addEventListener("submit", async (event) => {
     const data = await response.json();
 
     if (!response.ok) {
-      // o back manda erro de duas formas diferentes:
-      // - validateUser / validateUserFields (zod) -> { errors: ["msg1", "msg2"] }
-      // - errorHandler (ex: email duplicado)      -> { message: "msg" }
-      const message = data.errors
-        ? data.errors.join(", ")
-        : data.message || "Não foi possível cadastrar.";
-      showErrorMessage(message);
+      // o back manda erro em forma de objeto
+      if (data.errors) {
+        const errors = data.errors ? Object.values(data.errors).flat() : [];
+        if (errors.length === 1) {
+          showErrorMessage(errors[0]);
+        } else {
+          showErrors(errors);
+        }
+      }
+
       return;
     }
 
@@ -63,6 +66,17 @@ function showErrorMessage(message) {
 }
 
 function removeErrorMessage() {
-  const existing = form.querySelector(".form-error");
-  if (existing) existing.remove();
+  form.querySelectorAll(".form-error, .form-error-list")
+    .forEach(el => el.remove());
+}
+function showErrors(errors) {
+  removeErrorMessage();
+  const ul = document.createElement("ul");
+  ul.className = "form-error-list";
+  errors.forEach((error) => {
+    const li = document.createElement("li");
+    li.textContent = error;
+    ul.appendChild(li);
+  });
+  form.appendChild(ul);
 }
