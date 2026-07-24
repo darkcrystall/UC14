@@ -1,7 +1,7 @@
 const form = document.getElementById("form-login");
 const btnLogin = document.getElementById("btn-login");
 const messageDiv = document.getElementById("login-message");
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = "http://localhost:3000";
 
 form.addEventListener("submit", async (event) => {
   // evita que o form recarregue a página, que é o comportamento padrão dele

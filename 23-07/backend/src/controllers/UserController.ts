@@ -56,7 +56,8 @@ export class UserController {
     }
 
     async updateUser(req: Request, res: Response) {
-        const { id } = IdParamDTO.parse(req.params)
+        // const { id } = IdParamDTO.parse(req.params)
+        const id = req.user.id;
         const data = UpdateUserDTO.parse(req.body)
 
         const loggedUser = req.user
@@ -75,7 +76,8 @@ export class UserController {
     }
 
     async deleteUser(req: Request, res: Response) {
-        const { id } = IdParamDTO.parse(req.params)
+        // const { id } = IdParamDTO.parse(req.params)
+        const id = req.user.id;
 
         const loggedUser = req.user
 

@@ -46,23 +46,20 @@
               maxlength="100"
             />
           </div>
-          <div class="field">
-            <label for="actual-password">Senha atual</label>
-            <input
-              type="password"
-              name="actual-password"
-              id="actual-password"
-              maxlength="100"
-              required
-            />
-          </div>
           <div class="profile-buttons">
             <button type="submit" id="btn-editar-perfil" class="btn-primary">
-              Confirmar
+              Editar
             </button>
             <button id="btn-deletar-perfil" class="btn-secondary delete">
               Deletar perfil
             </button>
+          </div>
+          <div class="profile-message hidden" id="profile-message">
+            <span id="type-message"></span>
+            <div class="profile-buttons">
+              <button id="btn-permit" class="btn-primary permit">Confirmar</button>
+              <button id="btn-deny" class="btn-secondary deny">Cancelar</button>
+            </div>
           </div>
         </form>
       </section>

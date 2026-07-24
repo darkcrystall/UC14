@@ -11,6 +11,12 @@ form.addEventListener("submit", async (event) => {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  const confirmPass = document.getElementById("confirm-password").value;
+
+  if (password !== confirmPass) {
+    showErrorMessage("As senhas não correspondem");
+    return;
+  }
 
   btnCadastro.disabled = true;
   btnCadastro.textContent = "Cadastrando...";
@@ -25,6 +31,9 @@ form.addEventListener("submit", async (event) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (data.message) {
+        showErrorMessage(data.message);
+      }
       // o back manda erro em forma de objeto
       if (data.errors) {
         const errors = data.errors ? Object.values(data.errors).flat() : [];
@@ -34,7 +43,6 @@ form.addEventListener("submit", async (event) => {
           showErrors(errors);
         }
       }
-
       return;
     }
 
@@ -66,8 +74,9 @@ function showErrorMessage(message) {
 }
 
 function removeErrorMessage() {
-  form.querySelectorAll(".form-error, .form-error-list")
-    .forEach(el => el.remove());
+  form
+    .querySelectorAll(".form-error, .form-error-list")
+    .forEach((el) => el.remove());
 }
 function showErrors(errors) {
   removeErrorMessage();

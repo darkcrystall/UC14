@@ -11,8 +11,8 @@ router.get('/', authMiddleware, controller.findAllUser.bind(controller))
 router.get('/:id', authMiddleware, adminMiddleware, controller.getUserById.bind(controller))
 router.get('/email/:email', authMiddleware, adminMiddleware, controller.getUserByEmail.bind(controller))
 
-router.patch('/:id', authMiddleware, controller.updateUser.bind(controller))
-router.delete('/:id', authMiddleware, controller.deleteUser.bind(controller))
+router.patch('/', authMiddleware, controller.updateUser.bind(controller))
+router.delete('/', authMiddleware, controller.deleteUser.bind(controller))
 
 router.patch('/promove/:id', authMiddleware, adminMiddleware, controller.promove.bind(controller))
 
