@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "npx ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:generate": "npm run typeorm -- migration:generate src/migrations/Migration -d src/config/dataSource.ts",
+    "migration:run": "npm run typeorm -- migration:run -d src/config/dataSource.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/config/dataSource.ts"
   },
   "keywords": [],
   "type": "commonjs",
