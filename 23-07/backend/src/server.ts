@@ -11,7 +11,7 @@ const PORT = Number(process.env.PORT || "3000");
 // Configurar CORS para aceitar requisições do frontend
 app.use(
   cors({
-    origin: ["http://127.0.0.1:5501", "http://localhost:5501"], // URL do seu frontend
+    origin: ["http://127.0.0.1:5500", "http://localhost:5500"], // URL do seu frontend
     credentials: true, // Permite enviar cookies
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

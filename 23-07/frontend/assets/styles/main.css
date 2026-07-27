@@ -57,6 +57,7 @@ body {
 /* cartão principal */
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -95,16 +96,11 @@ h1 {
   border: none;
 }
 
-.btn-secondary.deny:hover {
-  transform: scale(1.1);
-}
-
 /* botão de confirmar */
 
 .btn-primary.permit:hover {
   background: var(--sucess);
   border: none;
-  transform: scale(1.1);
 }
 
 /* formulário */
@@ -194,12 +190,21 @@ input:focus-visible {
 /* mensagem do perfil */
 
 .profile-message {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  height: 100px;
-  gap: 5px;
+  align-self: center;
+  gap: 1rem;
+  padding: 2rem;
+  height: 60%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  z-index: 10;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* botão "sair" dentro do top-nav, estilizado igual aos links */
@@ -217,5 +222,7 @@ input:focus-visible {
 
 /* util */
 .hidden {
-  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }

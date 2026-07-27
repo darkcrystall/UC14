@@ -26,7 +26,7 @@ async function loadUserData() {
         window.location.href = "./form-login.html";
         return;
       }
-      showErrorMessage("Não foi possível carregar seus dados.");
+      showErrorMessage("Não foi possível carregar seus dados.", FormData);
       return;
     }
     const data = await response.json();
@@ -35,7 +35,7 @@ async function loadUserData() {
     return data;
   } catch (error) {
     console.error("Erro ao carregar dados do usuário:", error);
-    showErrorMessage("Erro ao conectar com o servidor. Tente novamente.");
+    showErrorMessage("Erro ao conectar com o servidor. Tente novamente.", form);
   }
 }
 
@@ -52,7 +52,10 @@ btnLogout.addEventListener("click", async () => {
 });
 
 btnDeletar.addEventListener("click", async () => {
-  // const userPermit = awaitUserConfirm("Deseja deletar o seu perfil?");
+  const confirmed = await awaitUserConfirm("Deseja deletar o seu perfil?<br>Confirme com sua senha atual.<br>Ao deletar, não é possível reverter.");
+
+  if (!confirmed) return;
+
   try {
     const response = await fetch(`${BASE_URL}/`, {
       method: "DELETE",
@@ -66,7 +69,7 @@ btnDeletar.addEventListener("click", async () => {
       }, 2000);
     }
   } catch (error) {
-    showErrorMessage(error);
+    showErrorMessage(error, form);
   }
 });
 
@@ -75,12 +78,18 @@ form.addEventListener("submit", async (event) => {
 
   removeMessages();
 
+  const confirmed = await awaitUserConfirm("Deseja editar o seu perfil?<br>Confirme com sua senha atual.");
+
+  if (!confirmed) return;
+
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const newPass = document.getElementById("new-password").value.trim();
-  const user = userLogged.then.prototype();
+
+  const user = await userLogged;
+
   if (name === user.name && email === user.email) {
-    showErrorMessage("Nada alterado");
+    showErrorMessage("Nada alterado", form);
   }
 
   const body = {};
@@ -113,13 +122,13 @@ form.addEventListener("submit", async (event) => {
         return;
       }
       if (data.message) {
-        showErrorMessage(data.message);
+        showErrorMessage(data.message, form);
       }
       // o back manda erro em forma de objeto
       if (data.errors) {
         const errors = data.errors ? Object.values(data.errors).flat() : [];
         if (errors.length === 1) {
-          showErrorMessage(errors[0]);
+          showErrorMessage(errors[0], form);
         } else {
           showErrors(errors);
         }
@@ -127,30 +136,30 @@ form.addEventListener("submit", async (event) => {
       return;
     }
 
-    showSuccessMessage("Perfil editado com sucesso!");
+    showSuccessMessage("Perfil editado com sucesso!", form);
   } catch (error) {
     console.error("Erro ao editar:", error);
-    showErrorMessage("Erro ao conectar com o servidor. Tente novamente.");
+    showErrorMessage("Erro ao conectar com o servidor. Tente novamente.", form);
   } finally {
     btnEditar.disabled = false;
     btnEditar.textContent = "Confirmar";
   }
 });
 
-function showErrorMessage(message) {
+function showErrorMessage(message, el) {
   removeMessages();
   const errorEl = document.createElement("p");
   errorEl.className = "form-error";
   errorEl.textContent = message;
-  form.appendChild(errorEl);
+  el.appendChild(errorEl);
 }
 
-function showSuccessMessage(message) {
+function showSuccessMessage(message, el) {
   removeMessages();
   const successEl = document.createElement("p");
   successEl.className = "form-success";
   successEl.textContent = message;
-  form.appendChild(successEl);
+  el.appendChild(successEl);
 }
 
 function removeMessages() {
@@ -182,12 +191,38 @@ const btnPermit = document.getElementById("btn-permit");
 const btnDeny = document.getElementById("btn-deny");
 
 function awaitUserConfirm(message) {
-  messageDiv.classList.remove("hidden");
-  messageType.textContent = `${message}`;
-  btnPermit.addEventListener("click", () => {
-    return true;
-  });
-  btnDeny.addEventListener("click", () => {
-    return false;
+  return new Promise((resolve) => {
+    messageDiv.classList.remove("hidden");
+    messageType.innerHTML = message;
+
+    const passwordInput = document.getElementById("confirm-password");
+    passwordInput.value = "";
+    passwordInput.focus();
+
+    const permitHandler = () => {
+      const password = passwordInput.value.trim();
+
+      if (!password) {
+        showErrorMessage("Digite sua senha.", messageDiv);
+        return;
+      }
+
+      cleanup();
+      resolve(password);
+    };
+
+    const denyHandler = () => {
+      cleanup();
+      resolve(null);
+    };
+
+    function cleanup() {
+      btnPermit.removeEventListener("click", permitHandler);
+      btnDeny.removeEventListener("click", denyHandler);
+      messageDiv.classList.add("hidden");
+    }
+
+    btnPermit.addEventListener("click", permitHandler);
+    btnDeny.addEventListener("click", denyHandler);
   });
 }
