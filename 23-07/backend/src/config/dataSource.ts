@@ -16,7 +16,8 @@ export const AppDataSource = new DataSource({
     entities: ['src/models/*.ts'],
     migrations: ['src/migrations/*.ts'],
     synchronize: false, // true -> ambiente de desenvolvimento, false -> ambiente de produção
-    logging: true
+    logging: true,
+    ssl: false // true -> certificado
 })
 
 AppDataSource.initialize()
