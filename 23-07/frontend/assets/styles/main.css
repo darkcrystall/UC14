@@ -198,7 +198,7 @@ input:focus-visible {
   align-self: center;
   gap: 1rem;
   padding: 2rem;
-  height: 60%;
+  height: fit-content;
   background: var(--surface);
   border: 1px solid var(--border);
   backdrop-filter: blur(20px);

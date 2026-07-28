@@ -52,25 +52,44 @@ btnLogout.addEventListener("click", async () => {
 });
 
 btnDeletar.addEventListener("click", async () => {
-  const confirmed = await awaitUserConfirm("Deseja deletar o seu perfil?<br>Confirme com sua senha atual.<br>Ao deletar, não é possível reverter.");
+  const currentPassword = await awaitUserConfirm(
+    "Deseja deletar o seu perfil?<br>Confirme com sua senha atual.<br>Ao deletar, não é possível reverter.",
+  );
 
-  if (!confirmed) return;
+  if (!currentPassword) return;
 
-  try {
-    const response = await fetch(`${BASE_URL}/`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (response.ok) {
-      showSuccessMessage("Perfil deletado com sucesso!");
-      localStorage.removeItem("user");
-      setTimeout(() => {
-        window.location.href = "../index.html";
-      }, 2000);
+  const response = await fetch(`${BASE_URL}/`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      currentPassword,
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    if (response.status === 403) {
+      showErrorMessage(data.message, form);
+      return;
     }
-  } catch (error) {
-    showErrorMessage(error, form);
+
+    if (response.status === 401) {
+      window.location.href = "./form-login.html";
+      return;
+    }
+
+    showErrorMessage(data.message ?? "Erro ao excluir perfil", form);
+    return;
   }
+
+  showSuccessMessage("Perfil deletado com sucesso!", form);
+  localStorage.removeItem("user");
+
+  setTimeout(() => {
+    window.location.href = "../index.html";
+  }, 2000);
 });
 
 form.addEventListener("submit", async (event) => {
@@ -78,24 +97,27 @@ form.addEventListener("submit", async (event) => {
 
   removeMessages();
 
-  const confirmed = await awaitUserConfirm("Deseja editar o seu perfil?<br>Confirme com sua senha atual.");
+  const currentPassword = await awaitUserConfirm(
+    "Deseja editar o seu perfil?<br>Confirme com sua senha atual.",
+  );
 
-  if (!confirmed) return;
+  if (!currentPassword) return;
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const newPass = document.getElementById("new-password").value.trim();
 
   const user = await userLogged;
-
-  if (name === user.name && email === user.email) {
+  if (name === user.user.name && email === user.user.email && !newPass) {
     showErrorMessage("Nada alterado", form);
+    return;
   }
 
   const body = {};
   if (name) body.name = name;
   if (email) body.email = email;
   if (newPass) body.password = newPass;
+  body.currentPassword = currentPassword;
 
   btnEditar.disabled = true;
   btnEditar.textContent = "Editando...";
@@ -115,9 +137,12 @@ form.addEventListener("submit", async (event) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 403) {
+        showErrorMessage(data.message, form);
+        return;
+      }
       // se o token expirou ou é inválido, manda de volta pro login
       if (response.status === 401) {
-        localStorage.removeItem("user");
         window.location.href = "./form-login.html";
         return;
       }

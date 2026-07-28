@@ -4,12 +4,14 @@ import { UserMapper } from "../mappers/UserMapper";
 import {
   BadRequestError,
   ConflictError,
+  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "../errors";
 import bcrypt from "bcryptjs";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
-import { hashPassword } from "../utils/passwordUtil";
+import { comparePassword, hashPassword } from "../utils/passwordUtil";
+import th from "zod/v4/locales/th.js";
 
 export class UserService {
   private readonly repo = AppDataSource.getRepository(User);
@@ -46,21 +48,17 @@ export class UserService {
       throw new NotFoundError("Usuário não encontrado");
     }
 
-    const isChangingSensitiveData = !!data.email || !!data.password;
+    if (!data.currentPassword) {
+      throw new UnauthorizedError("Informe sua senha");
+    }
 
-    if (isChangingSensitiveData) {
-      if (!data.currentPassword) {
-        throw new UnauthorizedError("Informe sua senha atual");
-      }
+    const passwordMatch = await bcrypt.compare(
+      data.currentPassword,
+      user.password
+    );
 
-      const passwordMatch = await bcrypt.compare(
-        data.currentPassword,
-        user.password
-      );
-
-      if (!passwordMatch) {
-        throw new UnauthorizedError("Senha incorreta");
-      }
+    if (!passwordMatch) {
+      throw new ForbiddenError("Senha incorreta");
     }
 
     if (data.email && data.email !== user.email) {
@@ -84,16 +82,36 @@ export class UserService {
     return UserMapper.toResponse(updatedUser);
   }
 
-  async deleteUser(id: number): Promise<Partial<User>> {
-    const user = await this.repo.findOneBy({ id });
+async deleteUser(
+  id: number,
+  currentPassword: string
+): Promise<Partial<User>> {
+  console.log("Senha recebida:", currentPassword);
 
-    if (!user) {
-      throw new NotFoundError("Usuário não encontrado");
-    }
+  const user = await this.repo.findOneBy({ id });
 
-    const usuarioExcluido = await this.repo.remove(user);
-    return UserMapper.toResponse(usuarioExcluido);
+  if (!user) {
+    throw new NotFoundError("Usuário não encontrado");
   }
+
+  const passwordMatch = await comparePassword(
+    currentPassword,
+    user.password
+  );
+
+  console.log("Password match:", passwordMatch);
+
+  if (!passwordMatch) {
+    console.log("SENHA INVÁLIDA");
+    throw new ForbiddenError("Senha incorreta");
+  }
+
+  console.log("REMOVENDO USUÁRIO");
+
+  const usuarioExcluido = await this.repo.remove(user);
+
+  return UserMapper.toResponse(usuarioExcluido);
+}
 
   async promoveUser(id: number): Promise<Partial<User>> {
     const user = await this.repo.findOneBy({ id });
