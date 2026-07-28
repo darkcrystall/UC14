@@ -160,8 +160,10 @@ form.addEventListener("submit", async (event) => {
       }
       return;
     }
-
-    showSuccessMessage("Perfil editado com sucesso!", form);
+    if (response.ok) {
+      removeErrorMessage();
+      showSuccessMessage("Perfil editado com sucesso!", form);
+    }
   } catch (error) {
     console.error("Erro ao editar:", error);
     showErrorMessage("Erro ao conectar com o servidor. Tente novamente.", form);

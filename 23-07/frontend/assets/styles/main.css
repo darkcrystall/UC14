@@ -90,10 +90,10 @@ h1 {
 
 /* botão de deletar e rejeiar/cancelar */
 
-.btn-secondary:hover.delete,
-.btn-secondary.deny {
+.btn-secondary.delete:hover,
+.btn-secondary.deny:hover {
   background: var(--err);
-  border: none;
+  border-color: var(--border);
 }
 
 /* botão de confirmar */
