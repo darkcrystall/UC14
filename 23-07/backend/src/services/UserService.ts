@@ -11,7 +11,6 @@ import {
 import bcrypt from "bcryptjs";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
 import { comparePassword, hashPassword } from "../utils/passwordUtil";
-import th from "zod/v4/locales/th.js";
 
 export class UserService {
   private readonly repo = AppDataSource.getRepository(User);
